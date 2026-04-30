@@ -1,0 +1,24 @@
+name: Build openssl-tool for Termux
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install dependencies
+        run: |
+          sudo apt update
+          sudo apt install -y git
+      - name: Checkout termux-packages
+        run: git clone https://github.com/termux/termux-packages.git
+      - name: Build openssl-tool
+        run: |
+          cd termux-packages
+          ./build-package.sh -a aarch64 -I openssl-tool
+      - name: Upload deb artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: openssl-tool-deb
+          path: termux-packages/output/*.deb
